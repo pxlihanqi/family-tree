@@ -12,6 +12,7 @@ import {
   updateAncestralHall,
   type AncestralHall,
 } from "./actions";
+import { showAlert, showConfirm } from "@/lib/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -234,7 +235,7 @@ export function AncestralHallsClient() {
   };
 
   const handleDeleteDonation = async (donationId: number) => {
-    if (!window.confirm("确认删除该捐赠记录吗？")) return;
+    if (!(await showConfirm("确认删除该捐赠记录吗？"))) return;
     setIsSaving(true);
     const result = await deleteHallDonation(donationId);
     setIsSaving(false);
@@ -246,7 +247,7 @@ export function AncestralHallsClient() {
   };
 
   const handleDeletePhoto = async (photoId: number) => {
-    if (!window.confirm("确认删除这张祠堂照片吗？")) return;
+    if (!(await showConfirm("确认删除这张祠堂照片吗？"))) return;
     setIsSaving(true);
     const result = await deleteHallPhoto(photoId);
     setIsSaving(false);
@@ -259,7 +260,7 @@ export function AncestralHallsClient() {
 
   const handleExportDonationsExcel = () => {
     if (allDonations.length === 0) {
-      alert("暂无捐赠记录可导出");
+      showAlert("暂无捐赠记录可导出");
       return;
     }
 
@@ -319,7 +320,7 @@ export function AncestralHallsClient() {
                     className="h-7 w-7 text-red-500 hover:text-red-600"
                     onClick={async (event) => {
                       event.stopPropagation();
-                      if (!window.confirm(`确认删除祠堂「${hall.name}」及其全部捐赠记录吗？`)) {
+                      if (!(await showConfirm(`确认删除祠堂「${hall.name}」及其全部捐赠记录吗？`))) {
                         return;
                       }
                       setIsSaving(true);

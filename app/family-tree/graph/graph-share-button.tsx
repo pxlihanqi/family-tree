@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,7 +28,7 @@ export function GraphShareButton() {
     setIsCreating(false);
 
     if (!result || typeof window === "undefined") {
-      alert("生成分享链接失败");
+      showAlert("生成分享链接失败");
       return;
     }
 
@@ -37,7 +38,7 @@ export function GraphShareButton() {
   const handleCopy = async () => {
     if (!shareLink) return;
     await navigator.clipboard.writeText(shareLink);
-    alert("分享链接已复制");
+    showAlert("分享链接已复制");
   };
 
   return (

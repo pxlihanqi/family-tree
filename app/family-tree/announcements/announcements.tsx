@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -70,7 +71,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
       setIsCreateOpen(false);
       window.location.reload();
     } else {
-      alert("发布失败，请稍后再试");
+      showAlert("发布失败，请稍后再试");
     }
   };
 
@@ -91,12 +92,12 @@ export function Announcements({ announcements }: AnnouncementsProps) {
       setIsEditOpen(false);
       window.location.reload();
     } else {
-      alert("更新失败，请稍后再试");
+      showAlert("更新失败，请稍后再试");
     }
   };
 
   const handleDelete = async (id: number) => {
-    const confirmed = window.confirm("确定要删除该公告吗？");
+    const confirmed = await showConfirm("确定要删除该公告吗？");
     if (!confirmed) return;
     setIsDeleting(id);
     const result = await deleteAnnouncement(id);
@@ -104,7 +105,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
     if (result) {
       window.location.reload();
     } else {
-      alert("删除失败，请稍后再试");
+      showAlert("删除失败，请稍后再试");
     }
   };
 
@@ -127,7 +128,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
       setSignupNotes("");
       window.location.reload();
     } else {
-      alert("报名失败，请稍后再试");
+      showAlert("报名失败，请稍后再试");
     }
   };
 
@@ -429,7 +430,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
               onClick={async () => {
                 if (!shareLink) return;
                 await navigator.clipboard.writeText(shareLink);
-                alert("已复制分享链接");
+                showAlert("已复制分享链接");
               }}
             >
               <Copy className="h-4 w-4 mr-2" />

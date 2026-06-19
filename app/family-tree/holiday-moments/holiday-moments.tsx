@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -183,14 +184,14 @@ export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
       setIsUploadDialogOpen(false);
       window.location.reload();
     } else {
-      alert("发布节日动态失败，请稍后再试");
+      showAlert("发布节日动态失败，请稍后再试");
     }
 
     setIsSubmitting(false);
   };
 
   const handleDeleteMoment = async (momentId: number) => {
-    const confirmed = window.confirm("确定要删除这条节日动态吗？");
+    const confirmed = await showConfirm("确定要删除这条节日动态吗？");
     if (!confirmed) return;
 
     setIsDeleting(momentId);
@@ -200,7 +201,7 @@ export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
     if (result) {
       window.location.reload();
     } else {
-      alert("删除节日动态失败，请稍后再试");
+      showAlert("删除节日动态失败，请稍后再试");
     }
 
     setIsDeleting(null);
@@ -219,21 +220,21 @@ export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
       resetAddMediaForm();
       window.location.reload();
     } else {
-      alert("追加媒体失败，请稍后再试");
+      showAlert("追加媒体失败，请稍后再试");
     }
 
     setIsAddingMedia(false);
   };
 
   const handleDeleteMedia = async (mediaId: number) => {
-    const confirmed = window.confirm("确定要删除这张图片/视频吗？");
+    const confirmed = await showConfirm("确定要删除这张图片/视频吗？");
     if (!confirmed) return;
 
     const result = await deleteHolidayMedia(mediaId);
     if (result) {
       window.location.reload();
     } else {
-      alert("删除媒体失败，请稍后再试");
+      showAlert("删除媒体失败，请稍后再试");
     }
   };
 

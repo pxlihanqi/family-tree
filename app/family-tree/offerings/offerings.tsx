@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,9 +14,10 @@ interface OfferingsProps {
   familyMemberId: number;
   offerings: Offering[];
   quickPresets?: { label: string; icon: React.ReactNode }[];
+  onRefresh?: () => void;
 }
 
-export function Offerings({ familyMemberId, offerings, quickPresets = [] }: OfferingsProps) {
+export function Offerings({ familyMemberId, offerings, quickPresets = [], onRefresh }: OfferingsProps) {
   const [isDialogOpen, setIsDialogOpen] = React.useState(false);
   const [content, setContent] = React.useState("");
   const [offeredBy, setOfferedBy] = React.useState("");
@@ -36,24 +38,24 @@ export function Offerings({ familyMemberId, offerings, quickPresets = [] }: Offe
       setContent("");
       setOfferedBy("");
       setIsDialogOpen(false);
-      window.location.reload();
+      onRefresh?.();
     } else {
-      alert("新增祭拜记录失败，请稍后再试");
+      showAlert("新增祭拜记录失败，请稍后再试");
     }
 
     setIsSubmitting(false);
   };
 
   const handleDelete = async (offeringId: number) => {
-    const confirmed = window.confirm("确定要删除这条祭拜记录吗？");
+    const confirmed = await showConfirm("确定要删除这条祭拜记录吗？");
     if (!confirmed) return;
 
     setIsDeleting(offeringId);
     const result = await deleteOffering(offeringId);
     if (result) {
-      window.location.reload();
+      onRefresh?.();
     } else {
-      alert("删除祭拜记录失败，请稍后再试");
+      showAlert("删除祭拜记录失败，请稍后再试");
     }
     setIsDeleting(null);
   };
@@ -67,9 +69,9 @@ export function Offerings({ familyMemberId, offerings, quickPresets = [] }: Offe
       offered_by: null,
     });
     if (result) {
-      window.location.reload();
+      onRefresh?.();
     } else {
-      alert("新增祭拜记录失败，请稍后再试");
+      showAlert("新增祭拜记录失败，请稍后再试");
     }
     setIsSubmitting(false);
   };

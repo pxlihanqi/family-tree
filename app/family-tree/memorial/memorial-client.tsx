@@ -61,6 +61,16 @@ export function MemorialClient({ members }: MemorialClientProps) {
     loadOfferings();
   }, [selectedId]);
 
+  const refreshOfferings = React.useCallback(async () => {
+    if (!selectedId) return;
+    try {
+      const data = await getOfferingsByMemberId(selectedId);
+      setOfferings(data);
+    } catch (error) {
+      console.error("获取祭拜记录失败:", error);
+    }
+  }, [selectedId]);
+
   if (members.length === 0) {
     return (
       <div className="text-center py-16 border rounded-lg">
@@ -178,6 +188,7 @@ export function MemorialClient({ members }: MemorialClientProps) {
             <Offerings
               familyMemberId={selectedMember.id}
               offerings={offerings}
+              onRefresh={refreshOfferings}
               quickPresets={[
                 { label: "鲜花一束", icon: <Flower2 className="h-4 w-4" /> },
                 { label: "清香一炷", icon: <Flame className="h-4 w-4" /> },

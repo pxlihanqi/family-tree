@@ -20,6 +20,7 @@ import {
   getViewportForBounds,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
+import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -1111,7 +1112,7 @@ const FamilyTreeGraphInner = memo(function FamilyTreeGraphInner({ initialData, o
     setIsCreatingChild(false);
 
     if (!result.success) {
-      alert(result.error || "新增子级失败");
+      showAlert(result.error || "新增子级失败");
       return;
     }
 
@@ -1129,7 +1130,7 @@ const FamilyTreeGraphInner = memo(function FamilyTreeGraphInner({ initialData, o
     setIsDeletingMember(false);
 
     if (!result.success) {
-      alert(result.error || "删除失败");
+      showAlert(result.error || "删除失败");
       return;
     }
 
@@ -1153,7 +1154,7 @@ const FamilyTreeGraphInner = memo(function FamilyTreeGraphInner({ initialData, o
     setIsCreatingSpouse(false);
 
     if (!result.success) {
-      alert(result.error || "新增配偶失败");
+      showAlert(result.error || "新增配偶失败");
       return;
     }
 
@@ -1210,7 +1211,7 @@ const FamilyTreeGraphInner = memo(function FamilyTreeGraphInner({ initialData, o
       setIsReordering(false);
 
       if (!result.success) {
-        alert(result.error || "更新排行失败");
+        showAlert(result.error || "更新排行失败");
         return;
       }
 

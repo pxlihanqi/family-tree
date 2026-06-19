@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -88,7 +89,7 @@ export function AlbumPhotos({ album, photos, familyMemberId }: AlbumPhotosProps)
   const handleDelete = async () => {
     if (selectedPhotos.size === 0) return;
     
-    const confirmed = window.confirm(
+    const confirmed = await showConfirm(
       `确定要删除选中的 ${selectedPhotos.size} 张照片吗？`
     );
     
@@ -102,7 +103,7 @@ export function AlbumPhotos({ album, photos, familyMemberId }: AlbumPhotosProps)
       setSelectedPhotos(new Set());
       window.location.reload();
     } else {
-      alert("删除照片失败，请稍后再试");
+      showAlert("删除照片失败，请稍后再试");
     }
     
     setIsDeleting(false);

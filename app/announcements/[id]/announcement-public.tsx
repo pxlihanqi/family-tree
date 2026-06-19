@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,13 +34,13 @@ export function AnnouncementPublic({ announcement }: AnnouncementPublicProps) {
     setIsSubmitting(false);
 
     if (result) {
-      alert("报名成功");
+      showAlert("报名成功");
       setName("");
       setContact("");
       setNotes("");
       window.location.reload();
     } else {
-      alert("报名失败，请稍后再试");
+      showAlert("报名失败，请稍后再试");
     }
   };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -56,7 +57,7 @@ export function PermissionsClient({ roles, permissions, rolePermissions, error }
     setSaving(false);
 
     if (!result.success) {
-      alert(result.error || "保存失败");
+      showAlert(result.error || "保存失败");
     } else {
       window.location.reload();
     }
@@ -66,9 +67,9 @@ export function PermissionsClient({ roles, permissions, rolePermissions, error }
     if (!userId.trim()) return;
     const result = await assignUserRole(userId.trim(), Number(userRoleId));
     if (!result.success) {
-      alert(result.error || "分配失败");
+      showAlert(result.error || "分配失败");
     } else {
-      alert("分配成功");
+      showAlert("分配成功");
     }
   };
 
@@ -76,9 +77,9 @@ export function PermissionsClient({ roles, permissions, rolePermissions, error }
     if (!userId.trim()) return;
     const result = await removeUserRole(userId.trim(), Number(userRoleId));
     if (!result.success) {
-      alert(result.error || "移除失败");
+      showAlert(result.error || "移除失败");
     } else {
-      alert("已移除");
+      showAlert("已移除");
     }
   };
 

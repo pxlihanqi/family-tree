@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -152,7 +153,7 @@ export function FamilyMembersTable({
     setIsExportingCsv(false);
 
     if (result.error) {
-      alert(`导出失败: ${result.error}`);
+      showAlert(`导出失败: ${result.error}`);
       return;
     }
 
@@ -227,7 +228,7 @@ export function FamilyMembersTable({
       setShareLink(`${window.location.origin}/share/${result.token}`);
       setShareExpiresAt(result.expires_at);
     } else {
-      alert("生成分享链接失败");
+      showAlert("生成分享链接失败");
     }
     setIsCreatingShare(false);
   };
@@ -282,7 +283,7 @@ export function FamilyMembersTable({
   const handleDelete = async () => {
     if (selectedIds.size === 0) return;
 
-    const confirmed = window.confirm(
+    const confirmed = await showConfirm(
       `确定要删除选中的 ${selectedIds.size} 条记录吗？`
     );
     if (!confirmed) return;
@@ -295,7 +296,7 @@ export function FamilyMembersTable({
       setSelectedIds(new Set());
       router.refresh();
     } else {
-      alert(`删除失败: ${result.error}`);
+      showAlert(`删除失败: ${result.error}`);
     }
   };
 
@@ -363,7 +364,7 @@ export function FamilyMembersTable({
     e.preventDefault();
 
     if (!formData.name.trim()) {
-      alert("请输入姓名");
+      showAlert("请输入姓名");
       return;
     }
 
@@ -414,7 +415,7 @@ export function FamilyMembersTable({
       handleCloseDialog();
       router.refresh();
     } else {
-      alert(`${isEditMode ? "更新" : "添加"}失败: ${result.error}`);
+      showAlert(`${isEditMode ? "更新" : "添加"}失败: ${result.error}`);
     }
   };
 

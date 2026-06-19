@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -308,7 +309,7 @@ export function PhotoAnnotationClient() {
     const image = images.find((item) => item.id === imageId);
     if (!image) return;
 
-    if (!window.confirm(`确认删除图片「${image.imageName}」及其全部标记吗？`)) {
+    if (!(await showConfirm(`确认删除图片「${image.imageName}」及其全部标记吗？`))) {
       return;
     }
 

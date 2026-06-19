@@ -13,6 +13,7 @@ import type { FamilyMemberNode } from "./graph/actions";
 import { RichTextViewer } from "@/components/rich-text/viewer";
 import { useState, useEffect, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -170,7 +171,7 @@ export function MemberDetailDialog({
     setIsCreatingShare(false);
 
     if (!result || typeof window === "undefined") {
-      alert("生成分享链接失败");
+      showAlert("生成分享链接失败");
       return;
     }
     setShareLink(`${window.location.origin}/share/${result.token}/member/${member.id}`);
@@ -179,7 +180,7 @@ export function MemberDetailDialog({
   const handleCopyShareLink = async () => {
     if (!shareLink) return;
     await navigator.clipboard.writeText(shareLink);
-    alert("分享链接已复制");
+    showAlert("分享链接已复制");
   };
 
   return (

@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import * as XLSX from "xlsx";
+import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -140,7 +141,7 @@ export function ImportMembersDialog({ onSuccess }: ImportMembersDialogProps) {
     setIsLoading(false);
 
     if (result.success) {
-      alert(`成功导入 ${result.count} 条记录`);
+      showAlert(`成功导入 ${result.count} 条记录`);
       setIsOpen(false);
       onSuccess?.();
     } else {

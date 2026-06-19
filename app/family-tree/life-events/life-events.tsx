@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -64,7 +65,7 @@ export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
       setIsAddDialogOpen(false);
       window.location.reload();
     } else {
-      alert("添加生平事迹失败，请稍后再试");
+      showAlert("添加生平事迹失败，请稍后再试");
     }
 
     setIsLoading(false);
@@ -87,7 +88,7 @@ export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
       setEditingEvent(null);
       window.location.reload();
     } else {
-      alert("更新生平事迹失败，请稍后再试");
+      showAlert("更新生平事迹失败，请稍后再试");
     }
 
     setIsLoading(false);
@@ -95,7 +96,7 @@ export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
 
   // 处理删除生平事迹
   const handleDeleteLifeEvent = async (eventId: number) => {
-    const confirmed = window.confirm("确定要删除这条生平事迹吗？");
+    const confirmed = await showConfirm("确定要删除这条生平事迹吗？");
     if (!confirmed) return;
 
     setIsDeleting(true);
@@ -105,7 +106,7 @@ export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
     if (result) {
       window.location.reload();
     } else {
-      alert("删除生平事迹失败，请稍后再试");
+      showAlert("删除生平事迹失败，请稍后再试");
     }
 
     setIsDeleting(false);
