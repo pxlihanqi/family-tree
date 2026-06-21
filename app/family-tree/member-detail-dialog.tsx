@@ -155,6 +155,30 @@ export function MemberDetailDialog({
     }
   }, [isOpen, member]);
 
+  const refreshOfferings = async () => {
+    if (!member) return;
+    try {
+      const data = await getOfferingsByMemberId(member.id);
+      setOfferings(data);
+    } catch (error) {
+      console.error("获取祭拜记录失败:", error);
+    }
+  };
+
+  const refreshAlbum = async () => {
+    if (!member) return;
+    try {
+      const albumData = await getOrCreateAlbum(member.id);
+      setAlbum(albumData);
+      if (albumData) {
+        const photosData = await getPhotosByAlbumId(albumData.id);
+        setPhotos(photosData);
+      }
+    } catch (error) {
+      console.error("获取相册数据失败:", error);
+    }
+  };
+
   if (!member) return null;
 
   const formatDate = (dateStr: string | null) => {
@@ -408,7 +432,7 @@ export function MemberDetailDialog({
                         {isLoadingOfferings ? (
                           <div className="text-sm text-muted-foreground">加载祭拜记录中...</div>
                         ) : (
-                          <Offerings familyMemberId={member.id} offerings={offerings} />
+                          <Offerings familyMemberId={member.id} offerings={offerings} onRefresh={refreshOfferings} />
                         )}
                       </div>
                     ) : null}

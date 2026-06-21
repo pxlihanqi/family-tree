@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +19,7 @@ interface PermissionsClientProps {
 }
 
 export function PermissionsClient({ roles, permissions, rolePermissions, error }: PermissionsClientProps) {
+  const router = useRouter();
   const [selectedRoleId, setSelectedRoleId] = React.useState<string>(roles[0]?.id.toString() ?? "");
   const [saving, setSaving] = React.useState(false);
   const [userId, setUserId] = React.useState("");
@@ -59,7 +61,7 @@ export function PermissionsClient({ roles, permissions, rolePermissions, error }
     if (!result.success) {
       showAlert(result.error || "保存失败");
     } else {
-      window.location.reload();
+      router.refresh();
     }
   };
 

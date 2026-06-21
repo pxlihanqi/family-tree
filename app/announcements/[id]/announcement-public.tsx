@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { showAlert } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +16,7 @@ interface AnnouncementPublicProps {
 }
 
 export function AnnouncementPublic({ announcement }: AnnouncementPublicProps) {
+  const router = useRouter();
   const [name, setName] = React.useState("");
   const [contact, setContact] = React.useState("");
   const [notes, setNotes] = React.useState("");
@@ -38,7 +40,7 @@ export function AnnouncementPublic({ announcement }: AnnouncementPublicProps) {
       setName("");
       setContact("");
       setNotes("");
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("报名失败，请稍后再试");
     }

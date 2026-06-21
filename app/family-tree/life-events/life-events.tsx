@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,6 +21,7 @@ interface LifeEventsProps {
 }
 
 export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
+  const router = useRouter();
   const [isAddDialogOpen, setIsAddDialogOpen] = React.useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = React.useState(false);
   const [editingEvent, setEditingEvent] = React.useState<LifeEvent | null>(null);
@@ -63,7 +65,7 @@ export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
 
     if (result) {
       setIsAddDialogOpen(false);
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("添加生平事迹失败，请稍后再试");
     }
@@ -86,7 +88,7 @@ export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
     if (result) {
       setIsEditDialogOpen(false);
       setEditingEvent(null);
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("更新生平事迹失败，请稍后再试");
     }
@@ -104,7 +106,7 @@ export function LifeEvents({ familyMemberId, lifeEvents }: LifeEventsProps) {
     const result = await deleteLifeEvent(eventId);
 
     if (result) {
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("删除生平事迹失败，请稍后再试");
     }

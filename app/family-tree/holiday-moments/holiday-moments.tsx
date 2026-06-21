@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -39,6 +40,7 @@ const HOLIDAY_SUGGESTIONS = [
 ];
 
 export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
+  const router = useRouter();
   const [isUploadDialogOpen, setIsUploadDialogOpen] = React.useState(false);
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState<number | null>(null);
@@ -182,7 +184,7 @@ export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
     if (result) {
       resetForm();
       setIsUploadDialogOpen(false);
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("发布节日动态失败，请稍后再试");
     }
@@ -199,7 +201,7 @@ export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
     const result = await deleteHolidayMoment(momentId);
 
     if (result) {
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("删除节日动态失败，请稍后再试");
     }
@@ -218,7 +220,7 @@ export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
 
     if (result) {
       resetAddMediaForm();
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("追加媒体失败，请稍后再试");
     }
@@ -232,7 +234,7 @@ export function HolidayMoments({ moments, members }: HolidayMomentsProps) {
 
     const result = await deleteHolidayMedia(mediaId);
     if (result) {
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("删除媒体失败，请稍后再试");
     }

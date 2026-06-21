@@ -17,9 +17,10 @@ interface AlbumPhotosProps {
   album: Album;
   photos: Photo[];
   familyMemberId: number;
+  onRefresh?: () => void;
 }
 
-export function AlbumPhotos({ album, photos, familyMemberId }: AlbumPhotosProps) {
+export function AlbumPhotos({ album, photos, familyMemberId, onRefresh }: AlbumPhotosProps) {
   const [selectedPhotos, setSelectedPhotos] = React.useState<Set<number>>(new Set());
   const [isUploadDialogOpen, setIsUploadDialogOpen] = React.useState(false);
   const [isDeleting, setIsDeleting] = React.useState(false);
@@ -71,7 +72,7 @@ export function AlbumPhotos({ album, photos, familyMemberId }: AlbumPhotosProps)
       }
       
       // 上传完成，刷新页面
-      window.location.reload();
+      onRefresh?.();
     } catch (error) {
       console.error("上传照片失败:", error);
     } finally {
@@ -101,7 +102,7 @@ export function AlbumPhotos({ album, photos, familyMemberId }: AlbumPhotosProps)
     
     if (result) {
       setSelectedPhotos(new Set());
-      window.location.reload();
+      onRefresh?.();
     } else {
       showAlert("删除照片失败，请稍后再试");
     }

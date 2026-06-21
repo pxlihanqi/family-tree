@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createRoot } from "react-dom/client";
 import {
   CheckCircle2,
@@ -11,6 +12,7 @@ type AlertType = "success" | "error" | "info" | "warning";
 interface AlertOptions {
   title?: string;
   type?: AlertType;
+  autoClose?: number;
 }
 
 const iconMap: Record<AlertType, typeof CheckCircle2> = {
@@ -58,13 +60,32 @@ function CustomAlert({
   message,
   type,
   onClose,
+  autoClose,
 }: {
   message: string;
   type: AlertType;
   onClose: () => void;
+  autoClose?: number;
 }) {
   const Icon = iconMap[type];
   const colors = colorMap[type];
+
+  React.useEffect(() => {
+    if (autoClose && autoClose > 0) {
+      const timer = setTimeout(onClose, autoClose);
+      return () => clearTimeout(timer);
+    }
+  }, [autoClose, onClose]);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
 
   return (
     <div
@@ -109,8 +130,10 @@ export function showAlert(message: string, options?: AlertOptions) {
     container.remove();
   };
 
+  const autoClose = options?.autoClose ?? (type === "success" ? 2000 : undefined);
+
   root.render(
-    <CustomAlert message={message} type={type} onClose={cleanup} />
+    <CustomAlert message={message} type={type} onClose={cleanup} autoClose={autoClose} />
   );
 }
 
@@ -118,11 +141,28 @@ function CustomConfirm({
   message,
   onConfirm,
   onCancel,
+  confirmText,
+  loading,
 }: {
   message: string;
   onConfirm: () => void;
   onCancel: () => void;
+  confirmText?: string;
+  loading?: boolean;
 }) {
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCancel();
+      }
+      if (e.key === "Enter" && !loading) {
+        onConfirm();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [onCancel, onConfirm, loading]);
+
   return (
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center"
@@ -143,15 +183,23 @@ function CustomConfirm({
         <div className="px-6 pb-5 flex gap-3">
           <button
             onClick={onCancel}
-            className="flex-1 h-10 rounded-xl text-sm font-medium transition-colors bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700"
+            disabled={loading}
+            className="flex-1 h-10 rounded-xl text-sm font-medium transition-colors bg-white dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-600 hover:bg-zinc-100 dark:hover:bg-zinc-700 disabled:opacity-50"
           >
             取消
           </button>
           <button
             onClick={onConfirm}
-            className="flex-1 h-10 rounded-xl text-sm font-medium transition-colors bg-white dark:bg-zinc-800 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-950/30"
+            disabled={loading}
+            className="flex-1 h-10 rounded-xl text-sm font-medium transition-colors bg-white dark:bg-zinc-800 text-red-600 dark:text-red-400 border border-red-300 dark:border-red-700 hover:bg-red-50 dark:hover:bg-red-950/30 disabled:opacity-50 flex items-center justify-center gap-2"
           >
-            确定删除
+            {loading && (
+              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+            )}
+            {confirmText || "确定删除"}
           </button>
         </div>
       </div>
@@ -159,7 +207,10 @@ function CustomConfirm({
   );
 }
 
-export function showConfirm(message: string): Promise<boolean> {
+export function showConfirm(
+  message: string,
+  options?: { confirmText?: string }
+): Promise<boolean> {
   return new Promise((resolve) => {
     const container = document.createElement("div");
     document.body.appendChild(container);
@@ -171,11 +222,38 @@ export function showConfirm(message: string): Promise<boolean> {
     };
 
     root.render(
-      <CustomConfirm
+      <ConfirmWithState
         message={message}
-        onConfirm={() => { cleanup(); resolve(true); }}
-        onCancel={() => { cleanup(); resolve(false); }}
+        confirmText={options?.confirmText}
+        onResolve={(result) => { cleanup(); resolve(result); }}
       />
     );
   });
+}
+
+function ConfirmWithState({
+  message,
+  confirmText,
+  onResolve,
+}: {
+  message: string;
+  confirmText?: string;
+  onResolve: (result: boolean) => void;
+}) {
+  const [loading, setLoading] = React.useState(false);
+
+  const handleConfirm = async () => {
+    setLoading(true);
+    onResolve(true);
+  };
+
+  return (
+    <CustomConfirm
+      message={message}
+      onConfirm={handleConfirm}
+      onCancel={() => onResolve(false)}
+      confirmText={confirmText}
+      loading={loading}
+    />
+  );
 }

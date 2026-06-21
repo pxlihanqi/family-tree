@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
 import { showAlert, showConfirm } from "@/lib/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ interface AnnouncementsProps {
 }
 
 export function Announcements({ announcements }: AnnouncementsProps) {
+  const router = useRouter();
   const [isCreateOpen, setIsCreateOpen] = React.useState(false);
   const [isEditOpen, setIsEditOpen] = React.useState(false);
   const [isSignupOpen, setIsSignupOpen] = React.useState(false);
@@ -69,7 +71,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
     if (result) {
       resetCreateForm();
       setIsCreateOpen(false);
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("发布失败，请稍后再试");
     }
@@ -90,7 +92,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
     setIsSubmitting(false);
     if (result) {
       setIsEditOpen(false);
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("更新失败，请稍后再试");
     }
@@ -103,7 +105,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
     const result = await deleteAnnouncement(id);
     setIsDeleting(null);
     if (result) {
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("删除失败，请稍后再试");
     }
@@ -126,7 +128,7 @@ export function Announcements({ announcements }: AnnouncementsProps) {
       setSignupName("");
       setSignupContact("");
       setSignupNotes("");
-      window.location.reload();
+      router.refresh();
     } else {
       showAlert("报名失败，请稍后再试");
     }
